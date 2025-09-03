@@ -215,7 +215,7 @@ class MinecraftRCONGUI:
         self.status_frame = ctk.CTkFrame(self.root, height=30)
         self.status_frame.pack(fill="x", padx=10, pady=(0, 10))
         
-        self.status_label = ctk.CTkLabel(self.status_frame, text="Ready", font=ctk.CTkFont(size=11))
+        self.status_label = ctk.CTkLabel(self.status_frame, text="Not Ready - Connect to Server first", font=ctk.CTkFont(size=11))
         self.status_label.pack(side="left", padx=10, pady=5)
         
         # Auto refresh toggle
@@ -227,7 +227,9 @@ class MinecraftRCONGUI:
     def show_connection_dialog(self):
         """Show connection dialog."""
         dialog = ConnectionDialog(self.root, self.server_host, self.server_port, self.server_password)
+        self.root.wait_window(dialog.dialog)  # <- Auf das echte Toplevel warten
         if dialog.result:
+            print("RESULT")
             self.server_host, self.server_port, self.server_password = dialog.result
             self.connect_to_server()
             
@@ -529,7 +531,7 @@ class ConnectionDialog:
         
         self.dialog = ctk.CTkToplevel(parent)
         self.dialog.title("Connect to Server")
-        self.dialog.geometry("400x350")
+        self.dialog.geometry("400x380")
         self.dialog.resizable(False, False)
         self.dialog.transient(parent)
         self.dialog.grab_set()
@@ -537,8 +539,8 @@ class ConnectionDialog:
         # Center the dialog
         self.dialog.update_idletasks()
         x = (self.dialog.winfo_screenwidth() - 400) // 2
-        y = (self.dialog.winfo_screenheight() - 350) // 2
-        self.dialog.geometry(f"400x350+{x}+{y}")
+        y = (self.dialog.winfo_screenheight() - 380) // 2
+        self.dialog.geometry(f"400x380+{x}+{y}")
         
         # Create form
         frame = ctk.CTkFrame(self.dialog)
